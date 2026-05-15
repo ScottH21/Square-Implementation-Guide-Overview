@@ -1,1 +1,0 @@
-# Square-Implementation-Guide-Overview
