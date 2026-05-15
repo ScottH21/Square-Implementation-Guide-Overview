@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Square Change Management Playbook</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f4;
+    --bg-info: #e6f1fb;
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b6b6b;
+    --text-tertiary: #aaaaaa;
+    --border: rgba(0,0,0,0.12);
+    --border-md: rgba(0,0,0,0.22);
+    --accent: #185FA5;
+    --accent-light: #E6F1FB;
+    --accent-dark: #0C447C;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f8f7; color: var(--text-primary); min-height: 100vh; }
+  .page { max-width: 780px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* Hero */
+  .hero { text-align: center; padding: 2.5rem 1rem 2rem; border-bottom: 0.5px solid var(--border); margin-bottom: 2rem; }
+  .hero-badge { display: inline-block; background: var(--accent-light); color: var(--accent-dark); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; }
+  .hero h1 { font-size: 28px; font-weight: 500; color: var(--text-primary); margin-bottom: 10px; }
+  .hero p { font-size: 15px; color: var(--text-secondary); max-width: 560px; margin: 0 auto; line-height: 1.65; }
+  .hero-logo { font-size: 13px; color: var(--text-tertiary); margin-top: 14px; letter-spacing: 0.05em; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.75rem; }
+  .tab { padding: 8px 16px; border-radius: 20px; border: 0.5px solid var(--border-md); background: transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer; transition: all 0.15s; white-space: nowrap; font-family: inherit; }
+  .tab:hover { background: var(--bg-secondary); color: var(--text-primary); }
+  .tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Headings */
+  .section-title { font-size: 18px; font-weight: 500; margin-bottom: 6px; }
+  .section-sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.65; }
+
+  /* Stat grid */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 10px; margin-bottom: 2rem; }
+  .stat { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 1rem; text-align: center; }
+  .stat .num { font-size: 26px; font-weight: 500; color: var(--accent); }
+  .stat .lbl { font-size: 12px; color: var(--text-secondary); margin-top: 4px; line-height: 1.4; }
+
+  /* Card grid */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 12px; margin-bottom: 2rem; }
+  .card { background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+  .card-icon { font-size: 20px; color: var(--accent); margin-bottom: 10px; }
+  .card h3 { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+  .card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* Phases */
+  .phase { display: grid; grid-template-columns: 36px 1fr; gap: 16px; margin-bottom: 1.5rem; align-items: start; }
+  .phase-dot { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .d-blue { background: #E6F1FB; color: #185FA5; }
+  .d-teal { background: #E1F5EE; color: #0F6E56; }
+  .d-amber { background: #FAEEDA; color: #854F0B; }
+  .d-green { background: #EAF3DE; color: #3B6D11; }
+  .phase-content { background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; }
+  .phase-content h4 { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+  .phase-content p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .phase-items { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .phase-item { font-size: 13px; color: var(--text-secondary); display: flex; gap: 8px; align-items: flex-start; }
+  .phase-item i { color: #1D9E75; font-size: 14px; margin-top: 2px; flex-shrink: 0; }
+
+  /* Objections */
+  .obj { border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; background: var(--bg-primary); margin-bottom: 10px; }
+  .obj-header { padding: 1rem 1.25rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .obj-header:hover { background: var(--bg-secondary); }
+  .obj-q { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px; }
+  .obj-q i { color: #E24B4A; font-size: 16px; flex-shrink: 0; }
+  .obj-chevron { color: var(--text-tertiary); transition: transform 0.2s; font-size: 16px; flex-shrink: 0; }
+  .obj.open .obj-chevron { transform: rotate(180deg); }
+  .obj-body { display: none; padding: 0 1.25rem 1.25rem; }
+  .obj.open .obj-body { display: block; }
+  .obj-tag { display: inline-block; background: #EAF3DE; color: #27500A; font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; font-weight: 500; }
+  .obj-body p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 8px; }
+  .tip { background: var(--bg-secondary); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 0 var(--radius-md) var(--radius-md) 0; font-size: 13px; margin-top: 10px; line-height: 1.6; }
+
+  /* ROI */
+  .roi-form { background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem; }
+  .roi-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
+  .field label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .field input { width: 100%; padding: 8px 10px; border: 0.5px solid var(--border-md); border-radius: var(--radius-md); font-size: 14px; font-family: inherit; outline: none; }
+  .field input:focus { border-color: var(--accent); }
+  .roi-result { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 1.25rem; }
+  .roi-headline { font-size: 24px; font-weight: 500; color: var(--accent); margin-bottom: 4px; }
+  .roi-sub { font-size: 13px; color: var(--text-secondary); }
+  .roi-breakdown { margin-top: 14px; }
+  .roi-line { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 0.5px solid var(--border); }
+  .roi-line:last-child { border-bottom: none; font-weight: 500; }
+  .roi-line .rl { color: var(--text-secondary); }
+  .roi-line.total .rv { color: var(--accent); }
+
+  /* Readiness */
+  .progress-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+  .progress-bar { background: var(--bg-secondary); border-radius: 20px; height: 6px; margin-bottom: 1.5rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 20px; transition: width 0.3s ease; }
+  .check-group { margin-bottom: 1rem; }
+  .check-group h4 { font-size: 12px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 0.5px solid var(--border); }
+  .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: var(--radius-md); cursor: pointer; }
+  .check-item:hover { background: var(--bg-secondary); }
+  .check-item input { margin-top: 2px; flex-shrink: 0; accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer; }
+  .check-item label { font-size: 14px; line-height: 1.5; cursor: pointer; }
+  .check-item.done label { color: var(--text-tertiary); text-decoration: line-through; }
+
+  /* Support tiers */
+  .sp-filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .sp-filter-btn { padding: 6px 14px; border-radius: 20px; border: 0.5px solid var(--border-md); background: transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+  .sp-filter-btn:hover { background: var(--bg-secondary); }
+  .sp-filter-btn.active { background: #E6F1FB; color: #0C447C; border-color: #85B7EB; }
+  .sp-tier { background: var(--bg-primary); border: 0.5px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 10px; overflow: hidden; }
+  .sp-tier-header { padding: 1rem 1.25rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .sp-tier-header:hover { background: var(--bg-secondary); }
+  .sp-tier-left { display: flex; align-items: center; gap: 12px; }
+  .sp-tier-icon { width: 36px; height: 36px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .ic-blue { background: #E6F1FB; color: #185FA5; }
+  .ic-teal { background: #E1F5EE; color: #0F6E56; }
+  .ic-amber { background: #FAEEDA; color: #854F0B; }
+  .ic-purple { background: #EEEDFE; color: #3C3489; }
+  .ic-green { background: #EAF3DE; color: #3B6D11; }
+  .sp-tier-title { font-size: 14px; font-weight: 500; }
+  .sp-tier-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .sp-tier-chevron { color: var(--text-tertiary); transition: transform 0.2s; font-size: 16px; flex-shrink: 0; }
+  .sp-tier.open .sp-tier-chevron { transform: rotate(180deg); }
+  .sp-tier-body { display: none; padding: 0 1.25rem 1.25rem; border-top: 0.5px solid var(--border); }
+  .sp-tier.open .sp-tier-body { display: block; }
+  .sp-tier-body p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-top: 12px; }
+  .sp-tier-items { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .sp-tier-item { font-size: 13px; color: var(--text-secondary); display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
+  .sp-tier-item i { color: #1D9E75; font-size: 14px; margin-top: 2px; flex-shrink: 0; }
+  .sp-tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; margin-top: 10px; margin-right: 4px; }
+  .t-blue { background: #E6F1FB; color: #0C447C; }
+  .t-green { background: #EAF3DE; color: #27500A; }
+  .t-amber { background: #FAEEDA; color: #633806; }
+  .t-teal { background: #E1F5EE; color: #085041; }
+  .t-purple { background: #EEEDFE; color: #3C3489; }
+  .sp-self-serve h4 { font-size: 12px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.07em; margin: 1.5rem 0 10px; padding-bottom: 6px; border-bottom: 0.5px solid var(--border); }
+  .sp-channel-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border); }
+  .sp-channel-row:last-child { border-bottom: none; }
+  .sp-channel-icon { font-size: 16px; color: var(--accent); margin-top: 1px; flex-shrink: 0; width: 20px; text-align: center; }
+  .sp-channel-text strong { font-size: 13px; font-weight: 500; display: block; margin-bottom: 2px; }
+  .sp-channel-text span { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .sp-channel-text a { color: var(--accent); text-decoration: none; }
+  .sp-channel-text a:hover { text-decoration: underline; }
+  .sp-note { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 12px 16px; margin-top: 1.25rem; font-size: 13px; color: var(--text-secondary); line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; }
+  .sp-note i { color: var(--accent); font-size: 16px; margin-top: 1px; flex-shrink: 0; }
+  .sp-note a { color: var(--accent); }
+  .sp-disclaimer { margin-top: 1rem; padding: 10px 14px; background: var(--bg-secondary); border-radius: var(--radius-md); font-size: 12px; color: var(--text-tertiary); line-height: 1.6; }
+
+  /* Footer */
+  .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 0.5px solid var(--border); text-align: center; font-size: 12px; color: var(--text-tertiary); }
+
+  @media (max-width: 520px) {
+    .roi-fields { grid-template-columns: 1fr; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-badge">Change Management Playbook</div>
+    <h1>Your partner through every step of change</h1>
+    <p>This guide addresses real concerns, shows what success looks like, and gives you a clear picture of every layer of support — before, during, and long after go-live.</p>
+    <div class="hero-logo">Powered by Square</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('why',this)">Why change</button>
+    <button class="tab" onclick="showTab('journey',this)">Your journey</button>
+    <button class="tab" onclick="showTab('objections',this)">Concerns answered</button>
+    <button class="tab" onclick="showTab('roi',this)">ROI calculator</button>
+    <button class="tab" onclick="showTab('ready',this)">Readiness check</button>
+    <button class="tab" onclick="showTab('support',this)">Support &amp; resources</button>
+  </div>
+
+  <!-- WHY CHANGE -->
+  <div id="tab-why" class="section active">
+    <p class="section-title">The cost of standing still</p>
+    <p class="section-sub">Change feels risky. But staying the same carries a cost too — in time lost, revenue left on the table, and staff frustration that compounds daily.</p>
+    <div class="stat-grid">
+      <div class="stat"><div class="num">23%</div><div class="lbl">avg revenue lift after payment modernization</div></div>
+      <div class="stat"><div class="num">4.5 hrs</div><div class="lbl">saved per week per location on admin</div></div>
+      <div class="stat"><div class="num">60 days</div><div class="lbl">typical time to full operational confidence</div></div>
+      <div class="stat"><div class="num">97%</div><div class="lbl">of customers feel supported through onboarding</div></div>
+    </div>
+    <div class="card-grid">
+      <div class="card"><div class="card-icon"><i class="ti ti-chart-line"></i></div><h3>Unified visibility</h3><p>See every location, transaction, and trend in one dashboard — no more reconciling spreadsheets at month end.</p></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-users"></i></div><h3>Staff retention</h3><p>Modern tools reduce training time and daily friction. Your team spends time on customers, not workarounds.</p></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-device-mobile"></i></div><h3>Sell anywhere</h3><p>Online, in-person, and on the go — inventory and reporting stay in sync across every channel automatically.</p></div>
+      <div class="card"><div class="card-icon"><i class="ti ti-lock"></i></div><h3>Enterprise security</h3><p>PCI-compliant by default. No compliance burden on your team — handled at the platform level.</p></div>
+    </div>
+  </div>
+
+  <!-- JOURNEY -->
+  <div id="tab-journey" class="section">
+    <p class="section-title">What to expect, week by week</p>
+    <p class="section-sub">No surprises. Here's exactly how the transition unfolds — with your team supported at every step.</p>
+    <div class="phase"><div class="phase-dot d-blue">1</div><div class="phase-content"><h4>Account setup &amp; pre-configuration — days 1–7</h4><p>Your dedicated onboarding specialist coordinates everything. You provide information; we do the heavy lifting.</p><div class="phase-items"><div class="phase-item"><i class="ti ti-check"></i><span>Account created and verified</span></div><div class="phase-item"><i class="ti ti-check"></i><span>Location structure confirmed (single, multi-location, or franchise)</span></div><div class="phase-item"><i class="ti ti-check"></i><span>Banking and deposit settings connected</span></div><div class="phase-item"><i class="ti ti-check"></i><span>Pricing confirmed and locked</span></div></div></div></div>
+    <div class="phase"><div class="phase-dot d-teal">2</div><div class="phase-content"><h4>Menu, inventory &amp; hardware — days 7–21</h4><p>We build your catalog, configure your hardware, and test everything before go-live.</p><div class="phase-items"><div class="phase-item"><i class="ti ti-check"></i><span>Menu/inventory items imported or built</span></div><div class="phase-item"><i class="ti ti-check"></i><span>Hardware ordered, configured, and shipped</span></div><div class="phase-item"><i class="ti ti-check"></i><span>Third-party integrations connected (QuickBooks, eCommerce)</span></div></div></div></div>
+    <div class="phase"><div class="phase-dot d-amber">3</div><div class="phase-content"><h4>Staff training &amp; go-live — days 21–45</h4><p>Your team gets hands-on training before your first real transaction.</p><div class="phase-items"><div class="phase-item"><i class="ti ti-check"></i><span>Kickoff call with your full team</span></div><div class="phase-item"><i class="ti ti-check"></i><span>Guided walkthrough of daily workflows</span></div><div class="phase-item"><i class="ti ti-check"></i><span>Go-live with specialist on standby</span></div></div></div></div>
+    <div class="phase"><div class="phase-dot d-green">4</div><div class="phase-content"><h4>Optimization &amp; growth — days 45–180</h4><p>Once live, we focus on unlocking more value — loyalty, advanced reporting, revenue tools.</p><div class="phase-items"><div class="phase-item"><i class="ti ti-check"></i><span>Loyalty program activated</span></div><div class="phase-item"><i class="ti ti-check"></i><span>Revenue reports reviewed with your team</span></div><div class="phase-item"><i class="ti ti-check"></i><span>Expansion to additional locations (if applicable)</span></div></div></div></div>
+  </div>
+
+  <!-- OBJECTIONS -->
+  <div id="tab-objections" class="section">
+    <p class="section-title">Concerns we hear — and the honest answers</p>
+    <p class="section-sub">Every great decision comes with questions. Here's how we respond to the most common ones.</p>
+    <div id="obj-list"></div>
+  </div>
+
+  <!-- ROI -->
+  <div id="tab-roi" class="section">
+    <p class="section-title">What's this worth to your business?</p>
+    <p class="section-sub">Adjust the fields below to estimate your potential annual benefit from switching.</p>
+    <div class="roi-form">
+      <div class="roi-fields">
+        <div class="field"><label>Monthly revenue ($)</label><input type="number" id="r-rev" value="80000" oninput="calcROI()"></div>
+        <div class="field"><label>Number of locations</label><input type="number" id="r-locs" value="2" min="1" oninput="calcROI()"></div>
+        <div class="field"><label>Staff hours/week on admin</label><input type="number" id="r-hrs" value="10" oninput="calcROI()"></div>
+        <div class="field"><label>Avg hourly labor cost ($)</label><input type="number" id="r-wage" value="22" oninput="calcROI()"></div>
+      </div>
+      <div class="roi-result">
+        <div class="roi-headline" id="roi-headline">$0</div>
+        <div class="roi-sub">Estimated annual benefit</div>
+        <div class="roi-breakdown" id="roi-breakdown"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- READINESS -->
+  <div id="tab-ready" class="section">
+    <p class="section-title">Readiness checklist</p>
+    <p class="section-sub">Track what's in place and what needs attention before we move forward.</p>
+    <div class="progress-label" id="prog-label">0 of 14 items confirmed</div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <div id="ready-list"></div>
+  </div>
+
+  <!-- SUPPORT -->
+  <div id="tab-support" class="section">
+    <p class="section-title">Support that grows with you</p>
+    <p class="section-sub">From your first transaction to your hundredth location, Square provides structured support at every stage — not just at go-live.</p>
+    <div class="sp-filter-row">
+      <button class="sp-filter-btn active" onclick="filterTiers('all',this)">All stages</button>
+      <button class="sp-filter-btn" onclick="filterTiers('launch',this)">Go-live support</button>
+      <button class="sp-filter-btn" onclick="filterTiers('ongoing',this)">Ongoing support</button>
+      <button class="sp-filter-btn" onclick="filterTiers('selfserve',this)">Self-serve tools</button>
+    </div>
+    <div id="sp-tiers">
+      <div class="sp-tier" data-stage="launch"><div class="sp-tier-header" onclick="toggleTier(this)"><div class="sp-tier-left"><div class="sp-tier-icon ic-blue"><i class="ti ti-rocket"></i></div><div><div class="sp-tier-title">Implementation &amp; go-live specialist</div><div class="sp-tier-sub">From contract through your first weeks live</div></div></div><i class="ti ti-chevron-down sp-tier-chevron"></i></div><div class="sp-tier-body"><p>For larger or more complex businesses, a dedicated implementation specialist guides you through the full setup — site survey, hardware installation, staff training, and hands-on support through your go-live period.</p><div class="sp-tier-items"><div class="sp-tier-item"><i class="ti ti-check"></i><span>Dedicated specialist assigned before go-live</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>On-site hardware setup and installation (where applicable)</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Staff training customized to your workflows</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Active support through your first week live</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Transition to Account Management ~2 weeks post go-live</span></div></div><span class="sp-tag t-blue">Larger &amp; complex accounts</span><span class="sp-tag t-teal">Go-live coverage</span></div></div>
+      <div class="sp-tier" data-stage="launch"><div class="sp-tier-header" onclick="toggleTier(this)"><div class="sp-tier-left"><div class="sp-tier-icon ic-teal"><i class="ti ti-code"></i></div><div><div class="sp-tier-title">Solutions engineering (API &amp; platform sellers)</div><div class="sp-tier-sub">Pre- and post-launch technical support</div></div></div><i class="ti ti-chevron-down sp-tier-chevron"></i></div><div class="sp-tier-body"><p>For API integrations and complex platform deals, Square provides a structured split between pre-launch and post-launch solutions engineering — so technical momentum doesn't drop off after the build phase.</p><div class="sp-tier-items"><div class="sp-tier-item"><i class="ti ti-check"></i><span>Pre-launch SE owns technical discovery, solution design, and guiding the build</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Post-launch SE supports your developers with API questions and debugging</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Integration tracker maintained for open risks and bugs</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Slack support channel with defined response SLA</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Formal handoff process ensures nothing falls through the cracks</span></div></div><span class="sp-tag t-teal">API &amp; platform deals</span><span class="sp-tag t-blue">Pre- &amp; post-launch</span></div></div>
+      <div class="sp-tier" data-stage="ongoing"><div class="sp-tier-header" onclick="toggleTier(this)"><div class="sp-tier-left"><div class="sp-tier-icon ic-amber"><i class="ti ti-briefcase"></i></div><div><div class="sp-tier-title">Account management</div><div class="sp-tier-sub">Your long-term commercial partner</div></div></div><i class="ti ti-chevron-down sp-tier-chevron"></i></div><div class="sp-tier-body"><p>Approximately two weeks after go-live, your account transitions to a dedicated Account Manager — focused on your growth, not just your day-to-day issues.</p><div class="sp-tier-items"><div class="sp-tier-item"><i class="ti ti-check"></i><span>Proactive check-ins and business reviews</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Expansion planning (new locations, new products)</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Escalation point for complex issues alongside TAS and Concierge</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Strategic partner for long-term growth</span></div></div><span class="sp-tag t-amber">Applicable segments</span><span class="sp-tag t-green">Long-term</span></div></div>
+      <div class="sp-tier" data-stage="ongoing"><div class="sp-tier-header" onclick="toggleTier(this)"><div class="sp-tier-left"><div class="sp-tier-icon ic-purple"><i class="ti ti-star"></i></div><div><div class="sp-tier-title">Premium support: TAS &amp; Concierge</div><div class="sp-tier-sub">For strategic and high-volume sellers</div></div></div><i class="ti ti-chevron-down sp-tier-chevron"></i></div><div class="sp-tier-body"><p>For strategic and premium sellers, Technical Account Support (TAS) and Concierge work alongside Account Management to cover ongoing needs — from complex troubleshooting to priority routing.</p><div class="sp-tier-items"><div class="sp-tier-item"><i class="ti ti-check"></i><span>TAS provides ongoing technical support and escalation coverage</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Concierge gives your team priority phone routing to specialized agents</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Concierge is phone-number based — keep key contacts updated for correct routing</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Concierge must be included as part of your agreement — confirm with your rep</span></div></div><span class="sp-tag t-purple">Strategic sellers</span><span class="sp-tag t-blue">Priority routing</span></div></div>
+      <div class="sp-tier" data-stage="ongoing"><div class="sp-tier-header" onclick="toggleTier(this)"><div class="sp-tier-left"><div class="sp-tier-icon ic-green"><i class="ti ti-headset"></i></div><div><div class="sp-tier-title">Standard seller support</div><div class="sp-tier-sub">Available to all Square sellers</div></div></div><i class="ti ti-chevron-down sp-tier-chevron"></i></div><div class="sp-tier-body"><p>All Square sellers have access to live support for issues — by phone, chat, and the Support Assistant in Dashboard and the POS app.</p><div class="sp-tier-items"><div class="sp-tier-item"><i class="ti ti-check"></i><span>Phone support: <a href="tel:18557006000">1-855-700-6000</a> (callback option often available)</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Live chat via Dashboard → Support → Support Assistant</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>POS app: More (≡) → Support → Get help</span></div><div class="sp-tier-item"><i class="ti ti-check"></i><span>Live agents available Mon–Fri, ~6 am–6 pm PT</span></div></div><span class="sp-tag t-green">All sellers</span><span class="sp-tag t-amber">Mon–Fri, 6 am–6 pm PT</span></div></div>
+    </div>
+    <div class="sp-self-serve" id="self-serve-section">
+      <h4>Always-on self-serve resources</h4>
+      <div class="sp-channel-row"><div class="sp-channel-icon"><i class="ti ti-search"></i></div><div class="sp-channel-text"><strong>Square Support Center</strong><span>Thousands of how-to articles, guides, and video tutorials at <a href="https://squareup.com/help" target="_blank">squareup.com/help</a>. The fastest starting point for most questions — available 24/7.</span></div></div>
+      <div class="sp-channel-row"><div class="sp-channel-icon"><i class="ti ti-users"></i></div><div class="sp-channel-text"><strong>Square Community</strong><span>Peer Q&amp;A, best practices, and staff-moderated discussions at <a href="https://community.squareup.com" target="_blank">community.squareup.com</a>.</span></div></div>
+      <div class="sp-channel-row"><div class="sp-channel-icon"><i class="ti ti-player-play"></i></div><div class="sp-channel-text"><strong>Square YouTube channel</strong><span>Video walkthroughs and product education — great for onboarding new staff. <a href="https://www.youtube.com/user/square/videos" target="_blank">Square on YouTube</a>.</span></div></div>
+    </div>
+    <div class="sp-note"><i class="ti ti-info-circle"></i><span>Support tiers, hours, and eligibility may vary by plan and account type. Your Square representative will confirm which support model applies to your business. For sellers outside the US, local numbers and languages are available — use the region selector at <a href="https://squareup.com/help" target="_blank">squareup.com/help</a>.</span></div>
+    <div class="sp-disclaimer">Support options, hours, and phone numbers may change. Always verify current details directly in Square's Support Center or linked Square Support articles.</div>
+  </div>
+
+  <div class="footer">Square Change Management Playbook &nbsp;·&nbsp; For seller use &nbsp;·&nbsp; squareup.com</div>
+</div>
+
+<script>
+const objections = [
+  { q: "We can't afford disruption to daily operations.", tag: "Risk concern", answer: "Transitions are scheduled around your business hours. Most clients go live in under 4 hours of active switchover time — we handle setup, testing, and configuration before you ever unplug the old system.", tip: "Schedule your go-live on a Tuesday or Wednesday morning when traffic is typically lowest. Your rep can advise on the best window for your business type." },
+  { q: "Our staff is going to resist the change.", tag: "People concern", answer: "Resistance usually comes from fear of the unknown, not the technology itself. We provide a dedicated kickoff call and self-service training resources staff can revisit anytime — at their own pace.", tip: "Identify your internal champion early: one enthusiastic team member who gets trained first can often bring the rest of the team along faster than any formal program." },
+  { q: "We've tried switching before and it was a nightmare.", tag: "Past experience", answer: "That's one of the most important things to tell us. We'll ask what went wrong and design your transition specifically to avoid those pitfalls — different sequencing, more checkpoints, or a slower rollout if needed.", tip: "The post-contract process is modular for a reason. We can slow down any phase without losing your pricing or starting over." },
+  { q: "What happens to our data from the old system?", tag: "Data concern", answer: "Your historical data belongs to you. We'll work with you on what to migrate and what to archive — menu items, customer records, and transaction history can all be handled before the old system is turned off.", tip: "Don't wait until go-live to think about data migration. Flag it in week one and we'll build it into your onboarding plan." },
+  { q: "We're not ready to commit — too many unknowns.", tag: "Timing concern", answer: "That's exactly why we do a pre-contract discovery. Signing the agreement starts the clock on your pricing lock — it doesn't mean you go live tomorrow. You set the timeline.", tip: "The 180-day window from contract to activation exists precisely for businesses that need time to prepare. Your pricing is protected from day one of signing." },
+  { q: "What if something breaks after we go live?", tag: "Support concern", answer: "You're never left alone. An implementation specialist stays active through your first week live, then an Account Manager takes the long-term commercial relationship — backed by TAS, Concierge (for eligible accounts), and 24/7 access to Square's Support Center and community.", tip: "Request a standing monthly check-in for the first six months. Most issues surface in the first 60 days, and proactive calls catch them before they become problems." }
+];
+
+const readyItems = {
+  "Decision makers": ["Key stakeholders identified and briefed","Budget approved or in process","Timeline agreed internally"],
+  "Business details": ["Number of locations confirmed","Ownership and EIN structure clarified","Franchise model identified (if applicable)","Bank account for deposits ready"],
+  "Operations": ["Menu or inventory list started","Current integrations (payroll, accounting) listed","Hardware needs assessed","Loyalty program interest flagged"],
+  "Technical": ["Point of contact for IT or tech issues named","Internet/connectivity at each location confirmed","Staff training schedule roughed out"]
+};
+
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleTier(header) { header.parentElement.classList.toggle('open'); }
+
+function filterTiers(stage, btn) {
+  document.querySelectorAll('.sp-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const ss = document.getElementById('self-serve-section');
+  ss.style.display = (stage === 'all' || stage === 'selfserve') ? 'block' : 'none';
+  document.querySelectorAll('.sp-tier').forEach(t => {
+    t.style.display = (stage === 'all' || t.getAttribute('data-stage') === stage) ? 'block' : 'none';
+  });
+}
+
+function buildObjections() {
+  const list = document.getElementById('obj-list');
+  objections.forEach(o => {
+    const el = document.createElement('div');
+    el.className = 'obj';
+    el.innerHTML = `<div class="obj-header" onclick="this.parentElement.classList.toggle('open')"><div class="obj-q"><i class="ti ti-alert-circle"></i>${o.q}</div><i class="ti ti-chevron-down obj-chevron"></i></div><div class="obj-body"><span class="obj-tag">${o.tag}</span><p>${o.answer}</p><div class="tip"><strong>Pro tip:</strong> ${o.tip}</div></div>`;
+    list.appendChild(el);
+  });
+}
+
+function calcROI() {
+  const rev = parseFloat(document.getElementById('r-rev').value) || 0;
+  const locs = parseFloat(document.getElementById('r-locs').value) || 1;
+  const hrs = parseFloat(document.getElementById('r-hrs').value) || 0;
+  const wage = parseFloat(document.getElementById('r-wage').value) || 0;
+  const revLift = Math.round(rev * 12 * 0.05);
+  const timeSave = Math.round(hrs * 0.45 * wage * 52 * locs);
+  const errSave = Math.round(locs * 1200);
+  const total = revLift + timeSave + errSave;
+  document.getElementById('roi-headline').textContent = '$' + total.toLocaleString();
+  document.getElementById('roi-breakdown').innerHTML = `<div class="roi-line"><span class="rl">Revenue lift (est. 5% uplift)</span><span class="rv">$${revLift.toLocaleString()}</span></div><div class="roi-line"><span class="rl">Labor hours recovered (45%)</span><span class="rv">$${timeSave.toLocaleString()}</span></div><div class="roi-line"><span class="rl">Error &amp; reconciliation reduction</span><span class="rv">$${errSave.toLocaleString()}</span></div><div class="roi-line total"><span class="rl">Estimated annual benefit</span><span class="rv">$${total.toLocaleString()}</span></div>`;
+}
+
+function buildReadiness() {
+  const container = document.getElementById('ready-list');
+  let total = 0;
+  Object.entries(readyItems).forEach(([group, items]) => {
+    const g = document.createElement('div');
+    g.className = 'check-group';
+    g.innerHTML = `<h4>${group}</h4>`;
+    items.forEach(item => {
+      total++;
+      const id = 'chk-' + total;
+      const row = document.createElement('div');
+      row.className = 'check-item';
+      row.innerHTML = `<input type="checkbox" id="${id}" onchange="updateProgress()"><label for="${id}">${item}</label>`;
+      g.appendChild(row);
+    });
+    container.appendChild(g);
+  });
+}
+
+function updateProgress() {
+  const all = document.querySelectorAll('#ready-list input[type=checkbox]');
+  const checked = document.querySelectorAll('#ready-list input[type=checkbox]:checked');
+  document.getElementById('prog-fill').style.width = Math.round((checked.length / all.length) * 100) + '%';
+  document.getElementById('prog-label').textContent = checked.length + ' of ' + all.length + ' items confirmed';
+  all.forEach(cb => cb.parentElement.classList.toggle('done', cb.checked));
+}
+
+buildObjections();
+buildReadiness();
+calcROI();
+</script>
+</body>
+</html>
